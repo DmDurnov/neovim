@@ -1,0 +1,7 @@
+require('globals')
+require('settings')
+require('keymaps')
+require('plugins')
+require('plugin_configs')
+require('lsp_configs')
+require('abbreviations')

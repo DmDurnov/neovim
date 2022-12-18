@@ -1,0 +1,6 @@
+vim.cmd('abb #i #include')
+vim.cmd('abb #d #define')
+vim.cmd('abb /a /// @author Durnov Dmitriy<Esc>')
+vim.cmd('abb /b /// @brief')
+vim.cmd('abb /p /// @param')
+vim.cmd('abb /= //========================================================================================<Esc>')
