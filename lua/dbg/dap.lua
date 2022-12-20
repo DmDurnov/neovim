@@ -7,7 +7,7 @@ end
 dap.adapters.cppdbg = {
    id = 'cppdbg',
    type = 'executable',
-   command = "C:/Users/durnov/AppData/Local/nvim-data/mason/bin/OpenDebugAD7.cmd",
+   command = vim.fn.stdpath("data") .. "/mason/bin/OpenDebugAD7.cmd",
    options = {
       detached = false
    }
@@ -34,9 +34,6 @@ dap.configurations.cpp = {
       program = function()
          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
       end,
-      symbolSearchPath = function()
-         return vim.fn.input('Path to .pdb: ', vim.fn.getcwd() .. '/', 'file')
-      end
    },
 }
 
