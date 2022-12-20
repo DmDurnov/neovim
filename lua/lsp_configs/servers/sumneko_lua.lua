@@ -10,8 +10,8 @@ local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
--- https://github.com/folke/lua-dev.nvim
-local ok_lua_dev, lua_dev = pcall(require, "neodev")
+-- https://github.com/folke/neodev.nvim
+local ok_neodev, neodev = pcall(require, "neodev")
 
 local on_attach = function(client, bufnr)
     -- formatting is done by null-ls
@@ -39,15 +39,15 @@ local settings = {
 }
 
 M.setup = function()
-    if ok_lua_dev then
-        local luadev = lua_dev.setup({
+    if ok_neodev then
+        local _neodev = neodev.setup({
             lspconfig = {
                 on_attach = on_attach,
                 capabilities = lsp_handlers.capabilities,
                 settings = settings,
             },
         })
-        lspconfig.sumneko_lua.setup(luadev)
+        lspconfig.sumneko_lua.setup(_neodev)
     else
         lspconfig.sumneko_lua.setup({
             on_attach = on_attach,

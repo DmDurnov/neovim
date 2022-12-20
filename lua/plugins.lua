@@ -126,7 +126,11 @@ return packer.startup(function(use)
     use("ray-x/lsp_signature.nvim")
 
     -- debug
-    use("mfussenegger/nvim-dap")
+    use({
+       "mfussenegger/nvim-dap",
+       "jayp0521/mason-nvim-dap.nvim"
+    })
+    use('rcarriga/nvim-dap-ui')
 
    if PACKER_BOOTSTRAP then
       require("packer").sync()

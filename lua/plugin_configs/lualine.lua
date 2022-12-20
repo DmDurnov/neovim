@@ -1,7 +1,10 @@
 -- 'nvim-lualine/lualine.nvim'
-local ok, lualine = pcall(require, "lualine")
-if not ok then
+local ok_lualine, lualine = pcall(require, "lualine")
+if not ok_lualine then
     print('"nvim-lualine/lualine.nvim" not available')
     return
 end
-lualine.setup()
+
+if ok_lualine then
+   lualine.setup({})
+end

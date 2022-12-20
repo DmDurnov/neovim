@@ -55,11 +55,6 @@ opt.listchars:append "precedes:↩"
 opt.listchars:append "space:•"
 opt.termguicolors = true
 
-require('indent_blankline').setup { -- TODO check indent_blankline is installed (error for new neovim built)
-   show_end_of_line = true,
-   space_char_blankline = " ",
-}
-
 opt.background = 'dark'
 
 --[[ Backups ]]--
