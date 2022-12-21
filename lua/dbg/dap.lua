@@ -13,30 +13,20 @@ dap.adapters.cppdbg = {
    }
 }
 
-dap.adapters.codelldb = {
-   type = 'server',
-   host = '127.0.0.1',
-   port = "13000",
-   -- executable = {
-   --    command = vim.fn.stdpath("data") .. "codelldb/extension/adapter/codelldb.exe",
-   --    args = { "--port", "13000"},
-   --    detached = false,
-   -- }
-}
-
 dap.configurations.cpp = {
    {
-      name = "Cpptools Launch",
+      name = "Launch",
       type = "cppdbg",
       request = "launch",
       program = function()
          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
       end,
       cwd = '${workspaceFolder}',
-      stopAtEntry = true,
+      stopAtEntry = false,
+      externalConsole = true,
    },
    {
-      name = 'Cpptools Debug',
+      name = 'Debug',
       type = 'cppdbg',
       request = 'launch',
       MIMode = 'gdb',
@@ -45,17 +35,13 @@ dap.configurations.cpp = {
       program = function()
          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
       end,
+      stopAtEntry = false,
+      externalConsole = true,
+      logging = {
+         moduleload = true,
+         trace = true,
+      }
    },
-   {
-      name = "Codelldb Launch",
-      type = "codelldb",
-      request = "launch",
-      program = function()
-         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-      end,
-      cwd = '${workspaceFolder}',
-      stopOnEntry = false,
-   }
 }
 
 local dap_ui_ok, dap_ui = pcall(require, "dapui")
@@ -77,11 +63,10 @@ dap_ui.setup({
   },
   -- Use this to override mappings for specific elements
   element_mappings = {
-    -- Example:
-    -- stacks = {
-    --   open = "<CR>",
-    --   expand = "o",
-    -- }
+    stacks = {
+      open = "<CR>",
+      expand = "o",
+    }
   },
   -- Expand lines larger than the window
   -- Requires >= 0.7
@@ -97,7 +82,7 @@ dap_ui.setup({
     {
       elements = {
       -- Elements can be strings or table with id and size keys.
-        { id = "scopes", size = 0.25 },
+        { id = "scopes", size = 0.2 },
         "breakpoints",
         "stacks",
         "watches",
@@ -110,7 +95,7 @@ dap_ui.setup({
         "repl",
         "console",
       },
-      size = 0.25, -- 25% of total lines
+      size = 0.2, -- 25% of total lines
       position = "bottom",
     },
   },
