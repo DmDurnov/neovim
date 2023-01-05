@@ -14,12 +14,12 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 -- Reload neovim whenever we save plugins.lua
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
+-- vim.cmd([[
+--   augroup packer_user_config
+--     autocmd!
+--     autocmd BufWritePost plugins.lua source <afile> | PackerSync
+--   augroup end
+-- ]])
 
 local ok, packer = pcall(require, "packer")
 if not ok then
@@ -58,6 +58,7 @@ return packer.startup(function(use)
    })
    use("jinh0/eyeliner.nvim")
    use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
+   use {'chentoast/marks.nvim'}
 
    -- Work tree
    use 'scrooloose/nerdtree'
@@ -66,6 +67,7 @@ return packer.startup(function(use)
    use("tpope/vim-fugitive")
    use("lewis6991/gitsigns.nvim")
    use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
+   use("f-person/git-blame.nvim")
 
    -- Diagnostics
    use("folke/trouble.nvim")
