@@ -1,3 +1,4 @@
+-- TODO change packer to lazy.nvim https://github.com/folke/lazy.nvim
 -- Automatically install packer
 local ensure_packer = function()
    local fn = vim.fn
