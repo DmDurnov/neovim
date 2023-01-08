@@ -4,7 +4,15 @@ if not dap_ok then
    return
 end
 
-dap.adapters.cppdbg = {
+-- adapters:
+-- linux
+dap.adapters.linux_cppdbg = {
+   id = 'cppdbg',
+   type = 'executable',
+   command = vim.fn.stdpath("data") .. "/cpptools/extension/debugAdapters/bin/OpenDebugAD7"
+}
+--windows
+dap.adapters.windows_cppdbg = {
    id = 'cppdbg',
    type = 'executable',
    command = vim.fn.stdpath("data") .. "/cpptools/extension/debugAdapters/bin/OpenDebugAD7.exe",
@@ -13,10 +21,11 @@ dap.adapters.cppdbg = {
    }
 }
 
+-- configurations
 dap.configurations.cpp = {
    {
-      name = "Launch",
-      type = "cppdbg",
+      name = "Launch (Linux)",
+      type = "linux_cppdbg",
       request = "launch",
       program = function()
          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
@@ -26,8 +35,36 @@ dap.configurations.cpp = {
       externalConsole = true,
    },
    {
-      name = 'Debug',
-      type = 'cppdbg',
+      name = "Launch (Windows)",
+      type = "windows_cppdbg",
+      request = "launch",
+      program = function()
+         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+      end,
+      cwd = '${workspaceFolder}',
+      stopAtEntry = false,
+      externalConsole = true,
+   },
+   {
+      name = 'Debug (Linux)',
+      type = 'linux_cppdbg',
+      request = 'launch',
+      MIMode = 'gdb',
+      miDebuggerPath = "/usr/bin/gdb",
+      cwd = '${workspaceFolder}',
+      program = function()
+         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+      end,
+      stopAtEntry = false,
+      externalConsole = true,
+      logging = {
+         moduleload = true,
+         trace = true,
+      }
+   },
+   {
+      name = 'Debug (Windows)',
+      type = 'windows_cppdbg',
       request = 'launch',
       MIMode = 'gdb',
       miDebuggerPath = "C:/msys64/mingw64/bin/gdb.exe",
@@ -44,6 +81,7 @@ dap.configurations.cpp = {
    },
 }
 
+-- setup dap_ui
 local dap_ui_ok, dap_ui = pcall(require, "dapui")
 if not dap_ui_ok then
    print ("nvim-dap-ui not available")

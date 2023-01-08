@@ -4,7 +4,4 @@ if not ok_mason_nvim_dap then
     return
 end
 
-mason_nvim_dap.setup({
-   automatic_setup = true,
-   ensure_installed = { "cpptools", }
-})
+mason_nvim_dap.setup()

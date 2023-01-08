@@ -35,3 +35,6 @@ map('n', '<leader>hd', '<cmd>Gitsigns diffthis<CR>', { noremap = true, silent = 
 map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
 map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
 
+--[[ Doxygen ]]--
+map('n', '<leader>ng', ":Neogen<CR>", { noremap = true, silent = true })
+

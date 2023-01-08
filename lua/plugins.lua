@@ -1,25 +1,17 @@
 -- Automatically install packer
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    PACKER_BOOTSTRAP = fn.system({
-        "git",
-        "clone",
-        "--depth",
-        "1",
-        "https://github.com/wbthomason/packer.nvim",
-        install_path,
-    })
-    print("Installing packer. Close and reopen Neovim once done...")
-    vim.cmd([[packadd packer.nvim]])
+local ensure_packer = function()
+   local fn = vim.fn
+   local install_path = fn.stdpath("data") .. '/site/pack/packer/start/packer.nvim'
+   if fn.empty(fn.glob(install_path)) > 0 then
+      fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+      print("Installing packer. Close and reopen Neovim once done...")
+      vim.cmd([[packadd packer.nvim]])
+      return true
+   end
+   return false
 end
 
--- Reload neovim whenever we save plugins.lua
--- vim.cmd([[
---   augroup packer_user_config
---     autocmd!
---     autocmd BufWritePost plugins.lua source <afile> | PackerSync
---   augroup end
--- ]])
+local packer_bootstrap = ensure_packer()
 
 local ok, packer = pcall(require, "packer")
 if not ok then
@@ -27,12 +19,21 @@ if not ok then
     return
 end
 
+--Reload neovim whenever we save plugins.lua
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
+
 packer.init({
-    display = {
-        open_fn = function()
-            return require("packer.util").float({ border = "rounded" })
-        end,
-    },
+   display = {
+       open_fn = function()
+           return require("packer.util").float({ border = "rounded" })
+       end,
+   },
 })
 
 return packer.startup(function(use)
@@ -134,7 +135,22 @@ return packer.startup(function(use)
     })
     use('rcarriga/nvim-dap-ui')
 
-   if PACKER_BOOTSTRAP then
+    --treesitter
+    use({
+       'nvim-treesitter/nvim-treesitter',
+       run = ':TSUpdate'
+    })
+
+    -- doxygen
+    use({
+       'danymat/neogen',
+       config = function()
+          require('neogen').setup()
+       end,
+       requires = "nvim-treesitter/nvim-treesitter"
+    })
+
+   if packer_bootstrap then
       require("packer").sync()
    end
 end)
