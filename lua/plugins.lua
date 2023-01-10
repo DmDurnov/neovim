@@ -145,9 +145,9 @@ return packer.startup(function(use)
     -- doxygen
     use({
        'danymat/neogen',
-       config = function()
-          require('neogen').setup()
-       end,
+       -- config = function()
+       --    require('neogen').setup()
+       -- end,
        requires = "nvim-treesitter/nvim-treesitter"
     })
 
