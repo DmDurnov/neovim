@@ -4,6 +4,9 @@ if not ok then
     print('"akinsho/bufferline.nvim" not available')
     return
 end
+
+return
+
 bufferline.setup({
     options = {
         mode = "tabs",

@@ -21,6 +21,30 @@ if ok_lualine then
          lualine_c = {
             { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available }
          }
-      }
+      },
+      tabline = {
+         lualine_a = { 'buffers' },
+         lualine_b = { '' },
+         lualine_c = { '' },
+         lualine_x = { '' },
+         lualine_y = { '' },
+         lualine_z = { 'tabs' },
+      },
+      winbar = {
+         lualine_a = { '' },
+         lualine_b = { '' },
+         lualine_c = { '' },
+         lualine_x = { '' },
+         lualine_y = { '' },
+         lualine_z = { '' },
+      },
+      inactive_winbar = {
+         lualine_a = { '' },
+         lualine_b = { '' },
+         lualine_c = { '' },
+         lualine_x = { '' },
+         lualine_y = { '' },
+         lualine_z = { '' },
+      },
    })
 end
