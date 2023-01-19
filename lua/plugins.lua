@@ -151,6 +151,9 @@ return packer.startup(function(use)
        requires = "nvim-treesitter/nvim-treesitter"
     })
 
+    -- terminal
+    use({'akinsho/toggleterm.nvim', tag = '*'})
+
    if packer_bootstrap then
       require("packer").sync()
    end
