@@ -5,6 +5,12 @@ if not ok_lualine then
     return
 end
 
+local ok_git_blame, git_blame = pcall(require, 'gitblame')
+if not ok_git_blame then
+   print('"gitblame not available"')
+   return
+end
+
 if ok_lualine then
    -- integrate with git blame
    vim.g.gitblame_display_virtual_text = false
