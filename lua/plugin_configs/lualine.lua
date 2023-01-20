@@ -19,6 +19,7 @@ if ok_lualine then
    lualine.setup({
       sections = {
          lualine_c = {
+            { 'filename', path = 2, },
             { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available }
          }
       },
