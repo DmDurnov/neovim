@@ -7,3 +7,7 @@ end
 toggleterm.setup{
    direction = 'float',
 }
+
+local map = vim.api.nvim_set_keymap
+map('n', '<leader>T', ":ToggleTerm<CR>", { noremap = true, silent = true })
+
