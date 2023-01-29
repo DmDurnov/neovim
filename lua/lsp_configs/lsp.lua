@@ -70,10 +70,8 @@ local setup_lsps = function()
         "cmake",
         "dockerls",
         "dotls",
-        "gopls",
         "jsonls",
         "pyright",
-        "tsserver",
         "vimls",
         "yamlls",
     }) do
