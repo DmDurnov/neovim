@@ -62,8 +62,12 @@ return packer.startup(function(use)
    use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
    use {'chentoast/marks.nvim'}
 
-   -- Work tree
-   use 'scrooloose/nerdtree'
+   -- File explorer
+   use {'nvim-tree/nvim-tree.lua',
+         requires = {
+            'nvim-tree/nvim-web-devicons',
+         },
+      }
 
    -- Git
    use("tpope/vim-fugitive")

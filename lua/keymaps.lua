@@ -19,8 +19,7 @@ map('', '<right>', ':echoe "Use l"<CR>', { noremap = true, silent = false })
 map('n', 'gn', ':bn<CR>', { noremap = true, silent = false })
 map('n', 'gp', ':bp<CR>', { noremap = true, silent =  false })
 
---[[NerdTree]]--
-map('n', '<F2>', ':NERDTreeToggle<CR>', { noremap = false, silent = false })
+-- Tagbar
 map('n', '<F8>', ':TagbarToggle<CR>', { noremap = false, silent = false })
 
 --[[Telescope]]--
