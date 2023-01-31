@@ -6,36 +6,38 @@ if not ok then
     return
 end
 
-nvim_tree.setup({
-    disable_netrw = true,
-    hijack_netrw = true,
-    update_cwd = true,
-    update_focused_file = {
-        enable = true,
-        update_cwd = true,
-        ignore_list = {},
-    },
-    diagnostics = {
-        enable = true,
-        icons = {
-            hint = "",
-            info = "",
-            warning = "",
-            error = "",
-        },
-    },
-    actions = {
-        open_file = {
-            resize_window = true,
-        },
-    },
-})
+nvim_tree.setup(
+{
+   auto_reload_on_write = false,
+   git = {
+      enable = false,
+   },
+   modified = {
+      enable = false,
+   },
+}
+)
 
 local map = vim.api.nvim_set_keymap
 map('n', '<F2>', ':NvimTreeToggle<CR>', { noremap = false, silent = false })
 
-local function open_nvim_tree()
+local function callback_open_nvim(data)
+   local isdir = vim.fn.isdirectory(data.file) == 1
+   if not isdir then
+      return
+   end
    require("nvim-tree.api").tree.open()
 end
 
-vim.api.nvim_create_autocmd({"VimEnter"}, { callback = open_nvim_tree })
+-- local function callback_open_buf(data)
+--    local realfile = vim.fn.filereadable(data.file) == 1
+--    local noname = data.file == "" and vim.bo[data.buf].buftype == ""
+--
+--    if not realfile and not noname then
+--       return
+--    end
+--    require("nvim-tree.api").tree.close()
+-- end
+
+vim.api.nvim_create_autocmd({"VimEnter"}, { callback = callback_open_nvim })
+-- vim.api.nvim_create_autocmd({"BufEnter"}, { callback = callback_open_buf })
