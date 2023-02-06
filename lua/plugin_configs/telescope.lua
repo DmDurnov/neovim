@@ -20,11 +20,9 @@ local telescope_extensions = TELESCOPE.extensions
 
 TELESCOPE.setup({
     defaults = {
-
         prompt_prefix = " ",
-        selection_caret = "📌 ",
+        selection_caret = "->",
         path_display = { "smart" },
-
         mappings = {
             i = { ["<C-t>"] = open_with_trouble },
             n = { ["<C-t>"] = open_with_trouble },

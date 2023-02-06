@@ -1,4 +1,3 @@
--- TODO change packer to lazy.nvim https://github.com/folke/lazy.nvim
 -- Automatically install packer
 local ensure_packer = function()
    local fn = vim.fn
@@ -59,7 +58,6 @@ return packer.startup(function(use)
      requires = { "kyazdani42/nvim-web-devicons", opt = true },
    })
    use("jinh0/eyeliner.nvim")
-   use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
    use {'chentoast/marks.nvim'}
 
    -- File explorer
@@ -80,9 +78,14 @@ return packer.startup(function(use)
    use("folke/todo-comments.nvim")
 
    -- Telescope
-   use({
-        "nvim-telescope/telescope.nvim",
-        requires = { "kyazdani42/nvim-web-devicons", opt = true },
+   use({ "nvim-telescope/telescope.nvim",
+        tag = '0.1.1',
+        requires = {
+           {
+           'nvim-lua/plenary.nvim',
+           'kyazdani42/nvim-web-devicons',
+        }
+     }
     })
     use {'nvim-telescope/telescope-fzf-native.nvim',
     	run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
@@ -157,6 +160,9 @@ return packer.startup(function(use)
 
     -- terminal
     use({'akinsho/toggleterm.nvim', tag = '*'})
+
+    -- start time
+    use('dstein64/vim-startuptime')
 
    if packer_bootstrap then
       require("packer").sync()
