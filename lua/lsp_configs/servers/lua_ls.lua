@@ -13,7 +13,7 @@ end
 
 M.setup = function()
     if ok_neodev then
-        lspconfig.sumneko_lua.setup(
+        lspconfig.lua_ls.setup(
         {
            settings = {
               Lua = {
