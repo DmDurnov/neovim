@@ -1,25 +1,17 @@
 -- https://github.com/jose-elias-alvarez/null-ls.nvim
 local ok, null_ls = pcall(require, "null-ls")
 if not ok then
-    return
+   print("null-ls not available")
+   return
 end
 
-local null_ls_formatting = null_ls.builtins.formatting
 local null_ls_diagnostics = null_ls.builtins.diagnostics
 
+local sources = {
+   null_ls_diagnostics.clazy
+}
+
 null_ls.setup({
-    sources = {
-        -- lua
-        -- https://github.com/johnnymorganz/stylua
-        null_ls_formatting.stylua,
-
-        -- pipx install black
-        null_ls_formatting.black,
-
-        -- pipx install isort
-        null_ls_formatting.isort,
-
-        -- pipx install flake8
-        null_ls_diagnostics.flake8,
-    },
+   sources = sources,
+   log_level = "trace",
 })
