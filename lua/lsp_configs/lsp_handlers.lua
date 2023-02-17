@@ -77,6 +77,7 @@ M.capabilities = nil
 local ok_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if ok_cmp_nvim_lsp then
     local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.offsetEncoding = "utf-16"
     M.capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 end
 

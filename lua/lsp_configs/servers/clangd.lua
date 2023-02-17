@@ -55,10 +55,7 @@ local opts = {
     },
 }
 
-local ok_clangd_extensions, clangd_extensions = pcall(
-    require,
-    "clangd_extensions"
-)
+local ok_clangd_extensions, clangd_extensions = pcall(require, "clangd_extensions")
 
 M.setup = function()
     if ok_clangd_extensions then

@@ -139,11 +139,10 @@ return packer.startup(function(use)
    use("kosayoda/nvim-lightbulb") -- Show code actions in a useful manner
    use("folke/neodev.nvim")
    use("ray-x/lsp_signature.nvim")
-   -- use({
-   --    "jose-elias-alvarez/null-ls.nvim",
-   --    requires = { "nvim-lua/plenary.nvim" },
-   -- })
-   use("mfussenegger/nvim-lint")
+   use({
+      "jose-elias-alvarez/null-ls.nvim",
+      requires = { "nvim-lua/plenary.nvim" },
+   })
 
    -- debug
    use({

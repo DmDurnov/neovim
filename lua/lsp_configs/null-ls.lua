@@ -7,11 +7,17 @@ end
 
 local null_ls_diagnostics = null_ls.builtins.diagnostics
 
+local lsp_handlers = require("lsp_configs.lsp_handlers")
+
 local sources = {
-   null_ls_diagnostics.clazy
+   null_ls_diagnostics.clazy,
+   null_ls_diagnostics.cmake_lint,
 }
 
-null_ls.setup({
+null_ls.setup{
+   debug = true,
    sources = sources,
-   log_level = "trace",
-})
+   on_attach = function(client, bufnr)
+      lsp_handlers.set_autocmds(client, bufnr)
+   end
+}
