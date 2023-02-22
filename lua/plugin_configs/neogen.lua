@@ -7,11 +7,11 @@ end
 local items = require("neogen.types.template").item
 
 local doxygen_style_annotation = {
-   { nil, "//----------------------------------------------------------------------------------------", { no_results = true, type = {"file"}}},
+   { nil, "//---------------------------------------------------------------------------------------", { no_results = true, type = {"file"}}},
    { nil, "/// @author Durnov Dmitriy", { type = { "func", "class", "type" } } },
    { nil, "/// @file", { no_results = true, type = { "file" } } },
    { nil, "/// @brief $1", { no_results = true, type = { "func", "file", "class" } } },
-   { nil, "//----------------------------------------------------------------------------------------", { no_results = true, type = {"file"}}},
+   { nil, "//---------------------------------------------------------------------------------------", { no_results = true, type = {"file"}}},
    { nil, "", { no_results = true, type = {"file"}}},
 
    { items.ClassName, "/// @class %s", { type = { "class" } } },
@@ -20,7 +20,7 @@ local doxygen_style_annotation = {
    { items.Tparam, "/// @tparam %s $1" },
    { items.Parameter, "/// @param %s $1" },
    { items.Return, "/// @return $1" },
-   { nil, "//========================================================================================", { type = { "func", "class", "type" } } },
+   { nil, "//=======================================================================================", { type = { "func", "class", "type" } } },
 }
 
 neogen.setup({

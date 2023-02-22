@@ -54,6 +54,7 @@ opt.listchars:append "extends:↪"
 opt.listchars:append "precedes:↩"
 opt.listchars:append "space:•"
 opt.termguicolors = true
+opt.colorcolumn = "90"
 
 opt.background = 'dark'
 
