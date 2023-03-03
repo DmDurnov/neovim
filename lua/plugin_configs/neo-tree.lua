@@ -5,14 +5,10 @@ if not ok then
     return
 end
 
-neo_tree.setup(
-{
-   close_if_last_window = false,
-   popup_border_style = "rounded",
-   enable_git_status = true,
-   enable_diagnostics = true,
-}
-)
+neo_tree.setup()
+
+vim.cmd([[let g:neo_tree_remove_legacy_commands = 1]])
 
 local map = vim.api.nvim_set_keymap
-map('n', '<F2>', ':NeoTreeShowToggle<CR>', { noremap = false, silent = false })
+map('n', '<F2>', ':Neotree toggle<CR>', { noremap = false, silent = false })
+map('n', '<leader>sb', ':Neotree buffers', { noremap = false, silent = false })

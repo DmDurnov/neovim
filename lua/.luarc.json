@@ -74,5 +74,6 @@
         "C:\\Users\\durnov\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\cmp_luasnip\\after",
         "C:\\Users\\durnov\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\nvim\\after",
         "${3rd}/luassert/library"
-    ]
+    ],
+    "workspace.checkThirdParty": false
 }
