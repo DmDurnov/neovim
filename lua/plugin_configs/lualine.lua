@@ -17,6 +17,14 @@ if ok_lualine then
    local git_blame = require('gitblame')
 
    lualine.setup({
+      options = {
+         disabled_filetypes = {
+            statusline = {
+               'neo-tree',
+               'NvimTree',
+            },
+         },
+      },
       sections = {
          lualine_c = {
             { 'filename', path = 2, },

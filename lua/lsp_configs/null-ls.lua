@@ -17,7 +17,6 @@ require('mason-null-ls').setup({
 
 local sources = {
    null_ls_diagnostics.clazy,
-   null_ls_diagnostics.cmake_lint,
 }
 
 null_ls.setup{
