@@ -175,6 +175,11 @@ return packer.startup(function(use)
    -- start time
    use('dstein64/vim-startuptime')
 
+   -- aerial
+   use({
+      'stevearc/aerial.nvim'
+   })
+
    if packer_bootstrap then
       require("packer").sync()
    end

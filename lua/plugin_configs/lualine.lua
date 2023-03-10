@@ -11,6 +11,21 @@ if not ok_git_blame then
    return
 end
 
+local ok_aerial, aerial = pcall(require, "aerial")
+if not ok_aerial then
+   print ('"aerial" not available')
+   return
+end
+
+aerial.setup({
+   on_attach = function(bufnr)
+      vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
+      vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
+   end
+})
+
+vim.keymap.set('n', "<leader>a", "<cmd>AerialToggle!<CR>")
+
 if ok_lualine then
    -- integrate with git blame
    vim.g.gitblame_display_virtual_text = false
@@ -29,11 +44,11 @@ if ok_lualine then
          lualine_c = {
             { 'filename', path = 2, },
             { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available }
-         }
+         },
       },
       tabline = {
          lualine_a = { 'buffers' },
-         lualine_b = { '' },
+         lualine_b = { "aerial" },
          lualine_c = { '' },
          lualine_x = { '' },
          lualine_y = { '' },
