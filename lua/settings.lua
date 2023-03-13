@@ -67,5 +67,8 @@ opt.writebackup = false
 --[[ File encodings ]]--
 opt.fileencodings = 'utf-8,cp1251'
 
+-- Close [No name] buffers
+opt.hidden = false
+
 --g.lsp_cxx_hl_log_file = '/tmp/vim-lsp-cxx-hl.log'
 --g.lsp_cxx_gl_verbose_log = true

@@ -35,28 +35,35 @@ if ok_lualine then
       options = {
          disabled_filetypes = {
             statusline = {
+               'NvimTree',
+               'packer',
+            },
+            winbar = {
                'neo-tree',
                'NvimTree',
+               'packer',
+               '',
             },
          },
       },
       sections = {
          lualine_c = {
-            { 'filename', path = 2, },
             { git_blame.get_current_blame_text, cond = git_blame.is_blame_text_available }
          },
       },
       tabline = {
          lualine_a = { 'buffers' },
-         lualine_b = { "aerial" },
+         lualine_b = { '' },
          lualine_c = { '' },
          lualine_x = { '' },
          lualine_y = { '' },
          lualine_z = { 'tabs' },
       },
       winbar = {
-         lualine_a = { '' },
-         lualine_b = { '' },
+         lualine_a = {
+            { 'filename', path = 2, },
+         },
+         lualine_b = { 'aerial' },
          lualine_c = { '' },
          lualine_x = { '' },
          lualine_y = { '' },
@@ -70,5 +77,9 @@ if ok_lualine then
          lualine_y = { '' },
          lualine_z = { '' },
       },
+      extensions = {
+         'quickfix',
+         'neo-tree',
+      }
    })
 end
