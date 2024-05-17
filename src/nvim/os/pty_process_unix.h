@@ -11,6 +11,7 @@ typedef struct {
   uint16_t width, height;
   struct winsize winsize;
   int tty_fd;
+  bool echo;
 } PtyProcess;
 
 #ifdef INCLUDE_GENERATED_DECLARATIONS

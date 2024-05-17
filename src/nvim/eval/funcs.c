@@ -4263,6 +4263,7 @@ static void f_jobstart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)
   bool detach = false;
   bool rpc = false;
   bool pty = false;
+  bool pty_echo = true;
   bool clear_env = false;
   bool overlapped = false;
   ChannelStdinMode stdin_mode = kChannelStdinPipe;
@@ -4335,6 +4336,7 @@ static void f_jobstart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)
   char *term_name = NULL;
 
   if (pty) {
+    pty_echo = tv_dict_get_number(job_opts, "pty_echo") != 0;
     width = (uint16_t)tv_dict_get_number(job_opts, "width");
     height = (uint16_t)tv_dict_get_number(job_opts, "height");
     // Legacy method, before env option existed, to specify $TERM.  No longer
@@ -4349,7 +4351,7 @@ static void f_jobstart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)
 
   Channel *chan = channel_job_start(argv, NULL, on_stdout, on_stderr, on_exit, pty,
                                     rpc, overlapped, detach, stdin_mode, cwd,
-                                    width, height, env, &rettv->vval.v_number);
+                                    width, height, pty_echo, env, &rettv->vval.v_number);
   if (chan) {
     channel_create_event(chan, NULL);
   }
@@ -7250,10 +7252,11 @@ static void f_rpcstart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)
   // The last item of argv must be NULL
   argv[i] = NULL;
 
+  bool pty_echo = true;
   Channel *chan = channel_job_start(argv, NULL, CALLBACK_READER_INIT,
                                     CALLBACK_READER_INIT, CALLBACK_NONE,
                                     false, true, false, false,
-                                    kChannelStdinPipe, NULL, 0, 0, NULL,
+                                    kChannelStdinPipe, NULL, 0, 0, pty_echo, NULL,
                                     &rettv->vval.v_number);
   if (chan) {
     channel_create_event(chan, NULL);
@@ -9019,12 +9022,13 @@ static void f_termopen(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)
   const bool rpc = false;
   const bool overlapped = false;
   const bool detach = false;
+  const bool pty_echo = true;
   ChannelStdinMode stdin_mode = kChannelStdinPipe;
   uint16_t term_width = (uint16_t)MAX(0, curwin->w_width_inner - win_col_off(curwin));
   Channel *chan = channel_job_start(argv, NULL, on_stdout, on_stderr, on_exit,
                                     pty, rpc, overlapped, detach, stdin_mode,
                                     cwd, term_width, (uint16_t)curwin->w_height_inner,
-                                    env, &rettv->vval.v_number);
+                                    pty_echo, env, &rettv->vval.v_number);
   if (rettv->vval.v_number <= 0) {
     return;
   }

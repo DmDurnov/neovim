@@ -358,7 +358,7 @@ static void close_cb(Stream *stream, void *data)
 Channel *channel_job_start(char **argv, const char *exepath, CallbackReader on_stdout,
                            CallbackReader on_stderr, Callback on_exit, bool pty, bool rpc,
                            bool overlapped, bool detach, ChannelStdinMode stdin_mode,
-                           const char *cwd, uint16_t pty_width, uint16_t pty_height, dict_T *env,
+                           const char *cwd, uint16_t pty_width, uint16_t pty_height, bool pty_echo, dict_T *env,
                            varnumber_T *status_out)
 {
   Channel *chan = channel_alloc(kChannelStreamProc);
@@ -383,6 +383,10 @@ Channel *channel_job_start(char **argv, const char *exepath, CallbackReader on_s
     }
     if (pty_height > 0) {
       chan->stream.pty.height = pty_height;
+    }
+    if (!pty_echo)
+    {
+      chan->stream.pty.echo = false;
     }
   } else {
     chan->stream.uv = libuv_process_init(&main_loop, chan);

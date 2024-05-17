@@ -61,7 +61,7 @@ uint64_t ui_client_start_server(int argc, char **argv)
   Channel *channel = channel_job_start(args, get_vim_var_str(VV_PROGPATH),
                                        CALLBACK_READER_INIT, on_err, CALLBACK_NONE,
                                        false, true, true, false, kChannelStdinPipe,
-                                       NULL, 0, 0, NULL, &exit_status);
+                                       NULL, 0, 0, true, NULL, &exit_status);
   if (!channel) {
     return 0;
   }
