@@ -1579,8 +1579,20 @@ void adjust_skipcol(void)
     redraw_later(curwin, UPD_NOT_VALID);
     return;  // don't scroll in the other direction now
   }
-  colnr_T col = curwin->w_virtcol - curwin->w_skipcol + scrolloff_cols;
   int row = 0;
+  colnr_T col = curwin->w_virtcol + scrolloff_cols;
+
+  // Avoid adjusting for 'scrolloff' beyond the text line height.
+  if (scrolloff_cols > 0) {
+    int size = win_linetabsize(curwin, curwin->w_topline,
+                               ml_get(curwin->w_topline), (colnr_T)MAXCOL);
+    size = width1 + width2 * ((size - width1 + width2 - 1) / width2);
+    while (col > size) {
+      col -= width2;
+    }
+  }
+  col -= curwin->w_skipcol;
+
   if (col >= width1) {
     col -= width1;
     row++;
@@ -2114,7 +2126,10 @@ void scroll_cursor_bot(win_T *wp, int min_scroll, bool set_topbot)
   wp->w_valid |= VALID_TOPLINE;
   wp->w_viewport_invalid = true;
 
-  cursor_correct_sms(wp);
+  // Make sure cursor is still visible after adjusting skipcol for "zb".
+  if (set_topbot) {
+    cursor_correct_sms(wp);
+  }
 }
 
 /// Recompute topline to put the cursor halfway across the window
@@ -2473,7 +2488,7 @@ int pagescroll(Direction dir, int count, bool half)
     int curscount = count;
     // Adjust count so as to not reveal end of buffer lines.
     if (dir == FORWARD
-        && (curwin->w_topline + curwin->w_height + count > buflen || hasAnyFolding(curwin))) {
+        && (curwin->w_topline + curwin->w_height_inner + count > buflen || hasAnyFolding(curwin))) {
       int n = plines_correct_topline(curwin, curwin->w_topline, NULL, false, NULL);
       if (n - count < curwin->w_height_inner && curwin->w_topline < buflen) {
         n += plines_m_win(curwin, curwin->w_topline + 1, buflen, curwin->w_height_inner + count);
@@ -2505,9 +2520,11 @@ int pagescroll(Direction dir, int count, bool half)
               ? MAX(1, (int)p_window - 2) : get_scroll_overlap(dir));
     nochange = scroll_with_sms(dir, count, &count);
 
-    // Place cursor at top or bottom of window.
-    validate_botline(curwin);
-    curwin->w_cursor.lnum = (dir == FORWARD ? curwin->w_topline : curwin->w_botline - 1);
+    if (!nochange) {
+      // Place cursor at top or bottom of window.
+      validate_botline(curwin);
+      curwin->w_cursor.lnum = (dir == FORWARD ? curwin->w_topline : curwin->w_botline - 1);
+    }
   }
 
   if (get_scrolloff_value(curwin) > 0) {

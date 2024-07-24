@@ -2531,6 +2531,10 @@ static bool cmdpreview_may_show(CommandLineState *s)
     goto end;
   }
 
+  // Flush now: external cmdline may itself wish to update the screen which is
+  // currently disallowed during cmdpreview(no longer needed in case that changes).
+  cmdline_ui_flush();
+
   // Swap invalid command range if needed
   if ((ea.argt & EX_RANGE) && ea.line1 > ea.line2) {
     linenr_T lnum = ea.line1;
@@ -3449,11 +3453,9 @@ void cmdline_screen_cleared(void)
 /// called by ui_flush, do what redraws necessary to keep cmdline updated.
 void cmdline_ui_flush(void)
 {
-  static bool flushing = false;
-  if (!ui_has(kUICmdline) || flushing) {
+  if (!ui_has(kUICmdline)) {
     return;
   }
-  flushing = true;
   int level = ccline.level;
   CmdlineInfo *line = &ccline;
   while (level > 0 && line) {
@@ -3468,7 +3470,6 @@ void cmdline_ui_flush(void)
     }
     line = line->prev_ccline;
   }
-  flushing = false;
 }
 
 // Put a character on the command line.  Shifts the following text to the
@@ -4069,18 +4070,22 @@ static char *get_cmdline_completion(void)
     return NULL;
   }
 
-  set_expand_context(p->xpc);
-  if (p->xpc->xp_context == EXPAND_UNSUCCESSFUL) {
+  int xp_context = p->xpc->xp_context;
+  if (xp_context == EXPAND_NOTHING) {
+    set_expand_context(p->xpc);
+    xp_context = p->xpc->xp_context;
+    p->xpc->xp_context = EXPAND_NOTHING;
+  }
+  if (xp_context == EXPAND_UNSUCCESSFUL) {
     return NULL;
   }
 
-  char *cmd_compl = get_user_cmd_complete(p->xpc, p->xpc->xp_context);
+  char *cmd_compl = get_user_cmd_complete(NULL, xp_context);
   if (cmd_compl == NULL) {
     return NULL;
   }
 
-  if (p->xpc->xp_context == EXPAND_USER_LIST
-      || p->xpc->xp_context == EXPAND_USER_DEFINED) {
+  if (xp_context == EXPAND_USER_LIST || xp_context == EXPAND_USER_DEFINED) {
     size_t buflen = strlen(cmd_compl) + strlen(p->xpc->xp_arg) + 2;
     char *buffer = xmalloc(buflen);
     snprintf(buffer, buflen, "%s,%s", cmd_compl, p->xpc->xp_arg);

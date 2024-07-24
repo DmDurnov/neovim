@@ -2170,6 +2170,47 @@ describe('TUI', function()
     }
   end)
 
+  it('draws screen lines with leading spaces correctly #29711', function()
+    local screen = tt.setup_child_nvim({
+      '-u',
+      'NONE',
+      '-i',
+      'NONE',
+      '--cmd',
+      'set foldcolumn=6 | call setline(1, ["", repeat("aabb", 1000)]) | echo 42',
+    }, { extra_rows = 10, cols = 66 })
+    screen:expect {
+      grid = [[
+                                                                        |
+            aabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabb|*12
+            aabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba@@@|
+      [No Name] [+]                                   1,0-1          Top|
+      42                                                                |
+      -- TERMINAL --                                                    |
+    ]],
+      attr_ids = {},
+    }
+    feed_data('\12') -- Ctrl-L
+    -- The first line counts as 3 cells.
+    -- For the second line, 6 repeated spaces at the start counts as 2 cells,
+    -- so each screen line of the second line counts as 62 cells.
+    -- After drawing the first line and 8 screen lines of the second line,
+    -- 3 + 8 * 62 = 499 cells have been counted.
+    -- The 6 repeated spaces at the start of the next screen line exceeds the
+    -- 500-cell limit, so the buffer is flushed after these spaces.
+    screen:expect {
+      grid = [[
+                                                                        |
+            aabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabb|*12
+            aabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba@@@|
+      [No Name] [+]                                   1,0-1          Top|
+                                                                        |
+      -- TERMINAL --                                                    |
+    ]],
+      attr_ids = {},
+    }
+  end)
+
   it('no heap-buffer-overflow when changing &columns', function()
     -- Set a different bg colour and change $TERM to something dumber so the `print_spaces()`
     -- codepath in `clear_region()` is hit.
@@ -2935,6 +2976,61 @@ describe('TUI', function()
         setrgbb = true,
       }, eval("get(g:, 'xtgettcap', '')"))
       eq({ true, 1 }, { child_session:request('nvim_eval', '&termguicolors') })
+    end)
+  end)
+
+  it('does not query the terminal for truecolor support if $COLORTERM is set', function()
+    clear()
+    exec_lua([[
+      vim.api.nvim_create_autocmd('TermRequest', {
+        callback = function(args)
+          local req = args.data
+          vim.g.termrequest = req
+          local xtgettcap = req:match('^\027P%+q([%x;]+)$')
+          if xtgettcap then
+            local t = {}
+            for cap in vim.gsplit(xtgettcap, ';') do
+              local resp = string.format('\027P1+r%s\027\\', xtgettcap)
+              vim.api.nvim_chan_send(vim.bo[args.buf].channel, resp)
+              t[vim.text.hexdecode(cap)] = true
+            end
+            vim.g.xtgettcap = t
+            return true
+          elseif req:match('^\027P$qm\027\\$') then
+            vim.g.decrqss = true
+          end
+        end,
+      })
+    ]])
+
+    local child_server = new_pipename()
+    screen = tt.setup_child_nvim({
+      '--listen',
+      child_server,
+      '-u',
+      'NONE',
+      '-i',
+      'NONE',
+    }, {
+      env = {
+        VIMRUNTIME = os.getenv('VIMRUNTIME'),
+        -- With COLORTERM=256, Nvim should not query the terminal and should not set 'tgc'
+        COLORTERM = '256',
+        TERM = 'xterm-256colors',
+      },
+    })
+
+    screen:expect({ any = '%[No Name%]' })
+
+    local child_session = n.connect(child_server)
+    retry(nil, 1000, function()
+      local xtgettcap = eval("get(g:, 'xtgettcap', {})")
+      eq(nil, xtgettcap['Tc'])
+      eq(nil, xtgettcap['RGB'])
+      eq(nil, xtgettcap['setrgbf'])
+      eq(nil, xtgettcap['setrgbb'])
+      eq(0, eval([[get(g:, 'decrqss')]]))
+      eq({ true, 0 }, { child_session:request('nvim_eval', '&termguicolors') })
     end)
   end)
 
